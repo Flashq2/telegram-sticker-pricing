@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StickerPass™ — Official Sticker Sending License</title>
+<link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #FFE600;
+    --dark: #1a1a2e;
+    --pink: #FF4D8D;
+    --blue: #0AEFFF;
+    --green: #00FF88;
+    --orange: #FF6B35;
+    --card-bg: #ffffff0f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    font-family: 'Nunito', sans-serif;
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 10% 20%, #FF4D8D22 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, #0AEFFF22 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, #FFE60011 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .floating-stickers {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .fs {
+    position: absolute;
+    font-size: 2rem;
+    opacity: 0.12;
+    animation: floatUp linear infinite;
+  }
+
+  @keyframes floatUp {
+    0%   { transform: translateY(110vh) rotate(0deg);   opacity: 0; }
+    10%  { opacity: 0.12; }
+    90%  { opacity: 0.12; }
+    100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 80px 20px 40px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--dark);
+    font-weight: 900;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 999px;
+    margin-bottom: 24px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  h1 {
+    font-family: 'Boogaloo', cursive;
+    font-size: clamp(3rem, 8vw, 6rem);
+    line-height: 1;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #FFE600, #FF4D8D, #0AEFFF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 30px #FF4D8D44);
+  }
+
+  .hero-sub {
+    font-size: 1.2rem;
+    color: #ffffff99;
+    max-width: 560px;
+    margin: 0 auto 12px;
+    line-height: 1.6;
+  }
+
+  .hero-law {
+    font-size: 0.85rem;
+    color: var(--yellow);
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  /* Telegram mockup */
+  .telegram-mockup {
+    position: relative;
+    z-index: 1;
+    max-width: 360px;
+    margin: 40px auto;
+    background: #212121;
+    border-radius: 20px;
+    padding: 20px;
+    border: 2px solid #ffffff15;
+    box-shadow: 0 30px 80px #0006;
+  }
+
+  .tg-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #fff1;
+    margin-bottom: 16px;
+  }
+
+  .tg-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--pink), var(--blue));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+  }
+
+  .tg-name { font-weight: 700; font-size: 0.95rem; }
+  .tg-status { font-size: 0.75rem; color: var(--green); }
+
+  .tg-msg {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tg-msg.me { align-items: flex-end; }
+
+  .bubble {
+    display: inline-block;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 0.9rem;
+    max-width: 75%;
+    line-height: 1.4;
+  }
+
+  .bubble.them { background: #2a2a2a; border-bottom-left-radius: 4px; }
+  .bubble.me { background: #2b5278; border-bottom-right-radius: 4px; }
+
+  .sticker-blocked {
+    background: #2a2a2a;
+    border: 2px dashed #ff4d4d66;
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    max-width: 180px;
+  }
+
+  .sticker-blocked .lock { font-size: 2.5rem; }
+  .sticker-blocked p { font-size: 0.7rem; color: #ff6b6b; text-align: center; font-weight: 700; }
+  .sticker-blocked small { font-size: 0.65rem; color: #ffffff55; }
+
+  /* Plans */
+  .plans-section {
+    position: relative;
+    z-index: 1;
+    padding: 20px 20px 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-family: 'Boogaloo', cursive;
+    font-size: 2.8rem;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .section-sub {
+    text-align: center;
+    color: #ffffff77;
+    margin-bottom: 50px;
+    font-size: 1rem;
+  }
+
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  .plan-card {
+    background: var(--card-bg);
+    border: 1.5px solid #ffffff18;
+    border-radius: 24px;
+    padding: 32px 28px;
+    position: relative;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    backdrop-filter: blur(20px);
+  }
+
+  .plan-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 60px #0008;
+  }
+
+  .plan-card.popular {
+    border-color: var(--yellow);
+    box-shadow: 0 0 40px #FFE60020;
+  }
+
+  .plan-card.popular:hover {
+    box-shadow: 0 30px 60px #FFE60025;
+  }
+
+  .popular-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--yellow);
+    color: var(--dark);
+    font-weight: 900;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 16px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .plan-icon { font-size: 2.8rem; margin-bottom: 12px; }
+
+  .plan-name {
+    font-family: 'Boogaloo', cursive;
+    font-size: 1.8rem;
+    margin-bottom: 4px;
+  }
+
+  .plan-tagline {
+    font-size: 0.8rem;
+    color: #ffffff66;
+    margin-bottom: 20px;
+  }
+
+  .plan-price {
+    margin-bottom: 24px;
+  }
+
+  .price-main {
+    font-family: 'Boogaloo', cursive;
+    font-size: 3.5rem;
+    line-height: 1;
+  }
+
+  .price-unit {
+    font-size: 0.85rem;
+    color: #ffffff77;
+  }
+
+  .plan-features {
+    list-style: none;
+    margin-bottom: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .plan-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.88rem;
+    color: #ffffffcc;
+    line-height: 1.4;
+  }
+
+  .plan-features li .check { flex-shrink: 0; }
+
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .btn:hover {
+    transform: scale(1.03);
+  }
+
+  .btn:active { transform: scale(0.98); }
+
+  .btn-yellow { background: var(--yellow); color: var(--dark); box-shadow: 0 8px 24px #FFE60040; }
+  .btn-outline { background: transparent; color: #fff; border: 2px solid #ffffff33; }
+  .btn-outline:hover { border-color: #fff; background: #ffffff0f; }
+  .btn-pink { background: linear-gradient(135deg, var(--pink), var(--orange)); color: #fff; box-shadow: 0 8px 24px #FF4D8D40; }
+
+  /* Law section */
+  .law-section {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: 0 auto 80px;
+    padding: 0 20px;
+    background: #ffffff08;
+    border: 1px solid #FFE60033;
+    border-radius: 20px;
+    padding: 32px;
+    text-align: center;
+  }
+
+  .law-section h3 {
+    font-family: 'Boogaloo', cursive;
+    font-size: 1.6rem;
+    color: var(--yellow);
+    margin-bottom: 12px;
+  }
+
+  .law-section p {
+    font-size: 0.85rem;
+    color: #ffffff88;
+    line-height: 1.7;
+  }
+
+  .law-section strong { color: #fff; }
+
+  /* FAQ */
+  .faq-section {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: 0 auto 100px;
+    padding: 0 20px;
+  }
+
+  .faq-section h2 {
+    font-family: 'Boogaloo', cursive;
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .faq-item {
+    background: #ffffff08;
+    border: 1px solid #ffffff15;
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+  }
+
+  .faq-q {
+    font-weight: 900;
+    margin-bottom: 8px;
+    color: var(--yellow);
+    font-size: 0.95rem;
+  }
+
+  .faq-a {
+    font-size: 0.88rem;
+    color: #ffffffaa;
+    line-height: 1.6;
+  }
+
+  /* Footer */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 30px 20px;
+    color: #ffffff33;
+    font-size: 0.78rem;
+    border-top: 1px solid #ffffff0f;
+  }
+
+  footer strong { color: #ffffff66; }
+
+  /* Color accents per plan */
+  .plan-starter .plan-name { color: #aaa; }
+  .plan-pro .plan-name { color: var(--yellow); }
+  .plan-ultra .plan-name { color: var(--pink); }
+
+</style>
+</head>
+<body>
+
+<!-- Floating background stickers -->
+<div class="floating-stickers" id="floaters"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="badge">⚖️ Official & Legally Binding</div>
+  <h1>StickerPass™</h1>
+  <p class="hero-sub">
+    Want to send stickers on Telegram? Cool.<br>
+    Buy a plan first. <strong style="color:var(--yellow)">Fri's orders.</strong> 🎫
+  </p>
+  <p class="hero-law">§ Article 1 — No License = No Sticker. End of Discussion.</p>
+</section>
+
+<!-- TELEGRAM MOCKUP -->
+<div class="telegram-mockup">
+  <div class="tg-header">
+    <div class="tg-avatar">🧑</div>
+    <div>
+      <div class="tg-name">You</div>
+      <div class="tg-status">● online</div>
+    </div>
+  </div>
+
+  <div class="tg-msg">
+    <div class="bubble them">haha that's so funny 😂</div>
+  </div>
+  <div class="tg-msg me">
+    <div class="bubble me">wait let me send you a sticker</div>
+  </div>
+  <div class="tg-msg me">
+    <div class="sticker-blocked">
+      <div class="lock">🔒</div>
+      <p>STICKER BLOCKED</p>
+      <small>StickerPass™ license required.<br>Subscribe to unlock.</small>
+    </div>
+  </div>
+  <div class="tg-msg">
+    <div class="bubble them">…get the plan 🙂</div>
+  </div>
+</div>
+
+<!-- PLANS -->
+<section class="plans-section">
+  <h2 class="section-title">Choose Your Sticker License 📋</h2>
+  <p class="section-sub">All plans are completely real and legally enforceable by Fri™ International Law.</p>
+
+  <div class="plans-grid">
+
+    <!-- STARTER -->
+    <div class="plan-card plan-starter">
+      <div class="plan-icon">🫥</div>
+      <div class="plan-name">Starter</div>
+      <div class="plan-tagline">For people who barely need stickers</div>
+      <div class="plan-price">
+        <span class="price-main">$1</span><br>
+        <span class="price-unit">per sticker / per emotion</span>
+      </div>
+      <ul class="plan-features">
+        <li><span class="check">😐</span> 3 stickers per day (basic emotions only)</li>
+        <li><span class="check">🚫</span> No crying stickers (too extra)</li>
+        <li><span class="check">⏰</span> Must wait 5 mins between stickers</li>
+        <li><span class="check">📋</span> Submit sticker intent form 24h in advance</li>
+        <li><span class="check">🔇</span> Silent mode — no reactions from Fri</li>
+      </ul>
+      <button class="btn btn-outline" onclick="clickPlan('Starter')">I'm a sticker minimalist</button>
+    </div>
+
+    <!-- PRO (POPULAR) -->
+    <div class="plan-card plan-pro popular">
+      <div class="popular-badge">⭐ Most Chosen by Desperate People</div>
+      <div class="plan-icon">🌟</div>
+      <div class="plan-name">Pro Sticker</div>
+      <div class="plan-tagline">For those who communicate in stickers</div>
+      <div class="plan-price">
+        <span class="price-main" style="color:var(--yellow)">$9</span><span style="font-size:1.4rem;color:var(--yellow)">.99</span><br>
+        <span class="price-unit">/ month + soul ownership</span>
+      </div>
+      <ul class="plan-features">
+        <li><span class="check">✅</span> Unlimited stickers (within reason)</li>
+        <li><span class="check">😭</span> Crying & dramatic stickers unlocked</li>
+        <li><span class="check">🔁</span> Send same sticker twice (no judgment)</li>
+        <li><span class="check">🌙</span> Midnight sticker rights (2AM max)</li>
+        <li><span class="check">😏</span> Fri will sometimes react back</li>
+        <li><span class="check">🏅</span> "Licensed Sticker Sender" title</li>
+      </ul>
+      <button class="btn btn-yellow" onclick="clickPlan('Pro Sticker')">Subscribe Now 💳</button>
+    </div>
+
+    <!-- ULTRA -->
+    <div class="plan-card plan-ultra">
+      <div class="plan-icon">💎</div>
+      <div class="plan-name">Ultra Chaos</div>
+      <div class="plan-tagline">You have a sticker problem. We support you.</div>
+      <div class="plan-price">
+        <span class="price-main" style="color:var(--pink)">$49</span><br>
+        <span class="price-unit">/ month + first-born naming rights</span>
+      </div>
+      <ul class="plan-features">
+        <li><span class="check">♾️</span> Infinite stickers, no cooldown</li>
+        <li><span class="check">🌀</span> Spam sticker pack allowed (3x per week)</li>
+        <li><span class="check">🎭</span> Custom sticker packs submitted to Fri</li>
+        <li><span class="check">📞</span> Priority sticker consultation (Mon–Fri)</li>
+        <li><span class="check">🤝</span> Fri MUST respond to your stickers</li>
+        <li><span class="check">🗿</span> Send stickers in voice calls (illegal elsewhere)</li>
+        <li><span class="check">👑</span> VIP: "Certified Sticker Addict" badge</li>
+      </ul>
+      <button class="btn btn-pink" onclick="clickPlan('Ultra Chaos')">I am the sticker menace 🌶️</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- LAW NOTICE -->
+<div class="law-section" style="position:relative;z-index:1;max-width:700px;margin:0 auto 60px;padding:32px 28px;">
+  <h3>📜 The StickerPass™ Terms of Sending</h3>
+  <p>
+    By existing in this chat, you acknowledge that sticker-sending privileges are a <strong>premium feature</strong>, not a human right.
+    Any sticker sent without a valid StickerPass™ license will be considered <strong>unauthorized emotional expression</strong>
+    and subject to a fine of one (1) coffee for Fri.
+    <br><br>
+    Fri™ International Sticker Law reserves the right to revoke your license if stickers are used to <strong>avoid answering questions</strong>,
+    sent at <strong>3AM without warning</strong>, or are <strong>"that one frog sticker"</strong> again.
+    <br><br>
+    <strong>All subscriptions are non-refundable.</strong> Sticker rights are non-transferable. Fri is not responsible for any emotions caused by sticker restriction.
+  </p>
+</div>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <h2>Frequently Asked 🤔</h2>
+
+  <div class="faq-item">
+    <div class="faq-q">What if I send a sticker without a license?</div>
+    <div class="faq-a">Your sticker will be spiritually rejected. Fri will leave you on read. The sticker may circle back to haunt you. Legal consequences pending review.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Can I share my license with a friend?</div>
+    <div class="faq-a">Absolutely not. StickerPass™ is bound to your soul. Sharing is a violation of Fri™ IP law and will result in both parties losing sticker privileges permanently.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Is the "Ultra Chaos" plan really worth it?</div>
+    <div class="faq-a">If you're asking, you already need it. The real question is: can you afford NOT to send stickers at 2AM? Exactly.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">What counts as a "sticker"?</div>
+    <div class="faq-a">Animated stickers count as 2x. Sticker packs count as 10x. GIFs with sticker energy — Fri's discretion. Emoji do NOT count, but don't push it.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Is this real?</div>
+    <div class="faq-a">This is 100% legally binding under Fri™ International Law, Article 69, Section 420. Please subscribe. Fri needs your money for bubble tea. 🧋</div>
+  </div>
+
+</section>
+
+<footer>
+  <p>© 2026 <strong>StickerPass™ by Fri™ International Holdings Ltd.</strong> — All sticker rights reserved.<br>
+  Not affiliated with Telegram. Very affiliated with chaos. 🫠</p>
+</footer>
+
+<script>
+  // Spawn floating stickers
+  const emojis = ['🐸','🌟','💀','😭','🔥','✨','🐸','😂','🤡','💅','🫶','🤌','🐣','🌈','🎭','🫠','🐸','😤'];
+  const container = document.getElementById('floaters');
+  for (let i = 0; i < 22; i++) {
+    const el = document.createElement('div');
+    el.className = 'fs';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.fontSize = (1.5 + Math.random() * 2) + 'rem';
+    el.style.animationDuration = (12 + Math.random() * 16) + 's';
+    el.style.animationDelay = (Math.random() * 15) + 's';
+    container.appendChild(el);
+  }
+
+  // Button click fun
+  function clickPlan(name) {
+    const msgs = {
+      'Starter': "😂 Smart choice. Very frugal. Fri is proud... barely.",
+      'Pro Sticker': "💳 Processing your soul... \n✅ Done! You may now send stickers.\n(Please send only tasteful ones.)",
+      'Ultra Chaos': "🌀 Oh no.\n\nFri sees you.\n\nWelcome to the chaos tier. 🫡"
+    };
+    alert(msgs[name] || "Processing...");
+  }
+</script>
+</body>
+</html>
